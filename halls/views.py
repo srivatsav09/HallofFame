@@ -13,6 +13,10 @@ def home(request):
     return render(request, 'halls/home.html')
 
 
+def dashboard(request):
+    return render(request, 'halls/dashboard.html')
+
+
 class SignUp(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('home')
@@ -32,12 +36,30 @@ class CreateHall(generic.CreateView):
     model = Hall
     fields = ['title']
     template_name = 'halls/create_hall.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('dashboard')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         super(CreateHall, self).form_valid(form)
         return redirect('home')
+
+
+class DetailHall(generic.DetailView):
+    model = Hall
+    template_name = 'halls/detail_hall.html'
+
+
+class UpdateHall(generic.UpdateView):
+    model = Hall
+    template_name = 'halls/update_hall.html'
+    fields = ['title']
+    success_url = reverse_lazy('dashboard')
+
+
+class DeleteHall(generic.DeleteView):
+    model = Hall
+    template_name = 'halls/delete_hall.html'
+    success_url = reverse_lazy('dashboard')
 
 # use cbv if ur using a particular base of  a model which is not too complicated
 # like for an object if we want to create a view to create,update delete then use cbv
