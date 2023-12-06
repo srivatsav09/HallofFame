@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import Hall
+from .models import Hall, Video
+from .forms import VideoForm, SearchForm
+from django.forms import formset_factory
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
@@ -64,3 +66,21 @@ class DeleteHall(generic.DeleteView):
 # use cbv if ur using a particular base of  a model which is not too complicated
 # like for an object if we want to create a view to create,update delete then use cbv
 # for The model Video it might get a bit messy using only cbvs then we use function based views as well
+
+
+def add_video(request, pk):
+    # VideoFormset = formset_factory(VideoForm, extra=5)
+    # form = VideoFormset()
+    form = VideoForm()
+    search_form = SearchForm()
+    if request.method == "POST":
+        filled_form = VideoForm(request.POST)
+        if filled_form.is_valid():
+            video = Video()
+            video.url = filled_form.cleaned_data['url']
+            video.title = filled_form.cleaned_data['title']
+            video.youtube_id = filled_form.cleaned_data['youtube_id']
+            video.hall = Hall.objects.get(pk=pk)
+            video.save()
+
+    return render(request, 'halls/add_video.html', {'form': form, 'search_form': search_form})
