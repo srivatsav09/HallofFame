@@ -1,13 +1,35 @@
 {% extends "halls/base.html" %} {%block content%}
 <div class="container">
-  <h2>Add a video</h2>
+  <h2>Add video to {{hall.title}}</h2>
   {% load crispy_forms_tags %}
   <form method="POST" id="sub">
     {% csrf_token %} {{form|crispy}}
-    <button type="submit" class="btn btn-primary">Add</button>
+    <button type="submit" class="btn btn-primary">Upload</button>
   </form>
+  <br />
   <h2>Or</h2>
   <form>{{search_form|crispy}}</form>
+  <div id="search_results"></div>
+  <script>
+    var delayTimer;
+    $("#id_search_term").keyup(function () {
+      clearTimeout(delayTimer);
+      $("#search_results").text("Loading...");
+      delayTimer = setTimeout(function () {
+        var text = $("#id_search_term").val();
+        $.ajax({
+          url: "/video/search",
+          data: {
+            search_term: text,
+          },
+          dataType: "json",
+          success: function (data) {
+            $("#search_results").text(data["hello"]);
+          },
+        });
+      }, 2000);
+    });
+  </script>
 </div>
 {% endblock %}
 
