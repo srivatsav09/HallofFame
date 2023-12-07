@@ -1,22 +1,29 @@
 {% extends "halls/base.html" %} {%block content%}
 <div class="container">
   <h2>Add a video</h2>
-  <form method="post">
-    {% csrf_token %} {%load widget_tweaks%} {%for field in form%}
-    <div class="form-group">
-      {{field.label_tag}} {% render_field field class="form-control" %}
-    </div>
-    {%endfor%}
-    <!-- {% comment %} {{formset.management_form}} {%for aform in form%}
-    {% endcomment %} {% comment %} {% for field in form %}
-    <p>
-      {{field.errors}} {% comment %} for errors {% endcomment %} {% comment %}
-      {{field.label_tag}} {{field}}
-    </p>
-    {%endfor%} {% endcomment %} -->
-    <button type="submit" class="btn btn-primary">Create</button>
+  {% load crispy_forms_tags %}
+  <form method="POST" id="sub">
+    {% csrf_token %} {{form|crispy}}
+    <button type="submit" class="btn btn-primary">Add</button>
   </form>
   <h2>Or</h2>
-  <form>{{search_form}}</form>
+  <form>{{search_form|crispy}}</form>
 </div>
 {% endblock %}
+
+<!-- <form method="post">
+  {% csrf_token %} {%load widget_tweaks%} {%for field in form%}
+  <div class="form-group {% if field.errors %}alert alert-danger{% endif %}">
+    {{field.errors}} {{field.label_tag}} {% render_field field
+    class="form-control" %}
+  </div>
+  {%endfor%}
+  {% comment %} {{formset.management_form}} {%for aform in form%}
+  {% endcomment %} {% comment %} {% for field in form %}
+  <p>
+    {{field.errors}} {% comment %} for errors {% endcomment %} {% comment %}
+    {{field.label_tag}} {{field}}
+  </p>
+  {%endfor%} {% endcomment %}
+  <button type="submit" class="btn btn-primary">Create</button>
+</form> -->
