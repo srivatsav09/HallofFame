@@ -108,5 +108,15 @@ def video_search(request):
     search_form = SearchForm(request.GET)
     print(search_form.errors)
     if search_form.is_valid():
-        return JsonResponse({'hello': search_form.cleaned_data['search_term']})
-    return JsonResponse({'hello': 'error'})
+        enc_search_term = urllib.parse.quote(
+            search_form.cleaned_data['search_term'])
+        response = requests.get(
+            f'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q={ enc_search_term }&key={YOUTUBE_API_KEY }')
+        return JsonResponse(response.json())
+    return JsonResponse({'error': 'Not able to validate form'})
+
+
+class DeleteVideo(generic.DeleteView):
+    model = Video
+    template_name = 'halls/del_vid.html'
+    success_url = reverse_lazy('dashboard')
