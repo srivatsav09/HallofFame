@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Hall(models.Model):
     title = models.CharField(max_length=255)
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True, null=True)
+        User, on_delete=models.CASCADE)
 
 
 class Video(models.Model):
@@ -13,4 +13,4 @@ class Video(models.Model):
     url = models.URLField()
     youtube_id = models.CharField(max_length=255)
     hall = models.ForeignKey(
-        Hall, on_delete=models.CASCADE, blank=True, null=True)
+        Hall, on_delete=models.CASCADE, null=True)
